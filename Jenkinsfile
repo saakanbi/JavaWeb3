@@ -3,20 +3,26 @@ pipeline {
 
   environment {
     IMAGE_NAME = 'wole9548/javaweb3'           // Your Docker Hub repo
-    DOCKER_CREDS_ID = 'dockerhub-creds-id'     // Credentials ID from Jenkins
-    VERSION = 'v1'                              // Static version tag
+    DOCKER_CREDS_ID = 'dockerhub-creds-id'     // Your Jenkins Docker Hub credential ID
+    VERSION = 'v1'
   }
 
   stages {
     stage('Checkout') {
       steps {
-        git 'https://github.com/CeeyIT-Solutions/JavaWeb3.git' // Or your own forked repo
+        git 'https://github.com/saakanbi/JavaWeb3.git'
       }
     }
 
-    stage('Build WAR') {
+    stage('Clean Workspace') {
       steps {
-        sh 'mvn clean package'
+        deleteDir() // Ensures clean build environment
+      }
+    }
+
+    stage('Build WAR with Maven') {
+      steps {
+        sh 'mvn clean package -Dmaven.compiler.source=1.8 -Dmaven.compiler.target=1.8'
       }
     }
 
@@ -42,10 +48,10 @@ pipeline {
 
   post {
     success {
-      echo "✅ Successfully pushed ${IMAGE_NAME}:${VERSION} and :latest to Docker Hub"
+      echo "✅ Build and push to Docker Hub succeeded!"
     }
     failure {
-      echo "❌ Build or push failed. Check logs above."
+      echo "❌ Build failed. Check logs for details."
     }
   }
 }
