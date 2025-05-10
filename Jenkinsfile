@@ -3,20 +3,20 @@ pipeline {
 
   environment {
     IMAGE_NAME = 'wole9548/javaweb3'           // Your Docker Hub repo
-    DOCKER_CREDS_ID = 'dockerhub-creds-id'     // Your Jenkins Docker Hub credential ID
-    VERSION = 'v1'
+    DOCKER_CREDS_ID = 'dockerhub-creds-id'     // Jenkins Credentials ID for Docker Hub
+    VERSION = 'v1'                              // Version tag for the image
   }
 
   stages {
     stage('Checkout') {
       steps {
-        git 'https://github.com/saakanbi/JavaWeb3.git'
+        checkout scm                          // ✅ Fixes missing pom.xml issue
       }
     }
 
     stage('Clean Workspace') {
       steps {
-        deleteDir() // Ensures clean build environment
+        deleteDir()                           // Optional: wipe old files before build
       }
     }
 
@@ -48,10 +48,10 @@ pipeline {
 
   post {
     success {
-      echo "✅ Build and push to Docker Hub succeeded!"
+      echo "✅ JavaWeb3 CI/CD pipeline completed successfully!"
     }
     failure {
-      echo "❌ Build failed. Check logs for details."
+      echo "❌ Build failed. Check the logs above."
     }
   }
 }
