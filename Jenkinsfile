@@ -16,18 +16,14 @@ pipeline {
 
     stage('Build and Package') {
       steps {
-        dir('JavaWeb3') {
-          sh 'mvn clean package -Dmaven.compiler.source=1.8 -Dmaven.compiler.target=1.8'
-        }
+        sh 'mvn clean package -Dmaven.compiler.source=1.8 -Dmaven.compiler.target=1.8'
       }
     }
 
     stage('Build Docker Image') {
       steps {
-        dir('JavaWeb3') {
-          script {
-            docker.build("${IMAGE_NAME}:${VERSION}")
-          }
+        script {
+          docker.build("${IMAGE_NAME}:${VERSION}")
         }
       }
     }
